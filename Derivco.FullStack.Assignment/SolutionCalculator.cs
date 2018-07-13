@@ -23,15 +23,40 @@ namespace Derivco.FullStack.Assignment
         }
         #endregion
 
+        // the algorithm can be made concurrent
+        // by making this collection concurrent
         private IList<Rectangle> _outputRectangles;
 
         private IList<Rectangle> CalculateSolution(IList<Rectangle> inputRectangles)
         {
             _outputRectangles = new List<Rectangle>();
+
             RotateRectangles(inputRectangles.ToArray(), inputRectangles[0].Bottom);
+ 
             return _outputRectangles;
         }
 
+        /// <summary>
+        /// Creates rotated rectangles and assigns them to _outputRectangles.
+        /// The algorithm's idea is similar to QuickSort:
+        /// 1. do a linear operation, find a wanted element index;
+        /// 2. run the same process for the left and the right part (in regards to the wanted element);
+        /// 3. stop when there are no elements in the parts.
+        /// 
+        /// We do O(n) operations (where n is the length of the current inputRectangles) on each recursion calls,
+        /// depth of the stack is O(log(n)) (where n is the length of the initial inputRectangles).
+        /// Thus, the whole algorithm is of O(nlog(n)) time complexity.
+        /// 
+        /// Space complexity is O(n) as we at least have to hold the collection of results.
+        /// 
+        /// The algorithm can be improved by passing first/last indices
+        /// instead of creating leftInputs and rightInputs
+        /// and holding initial inputRectangles in a class field.
+        /// </summary>
+        /// <param name="inputRectangles">
+        /// Is of type array in order to use Array.Copy later on
+        /// </param>
+        /// <param name="currentGroundBottom"></param>
         private void RotateRectangles(
             Rectangle[] inputRectangles,
             int currentGroundBottom)
@@ -83,22 +108,16 @@ namespace Derivco.FullStack.Assignment
         }
 
         private Rectangle CreateHorizontalReatangle(
-            Rectangle[] inputRectangles,
-            RectanglesInfo rectanglesInfo,
-            int currentGroundBottom)
-        {
-            //var right = inputRectangles[0].Left + rectanglesInfo.TotalWidth;
-            //var top = inputRectangles[0].Bottom + rectanglesInfo.IMin;
-
-            return new Rectangle
+                Rectangle[] inputRectangles,
+                RectanglesInfo rectanglesInfo,
+                int currentGroundBottom) =>
+            new Rectangle
             {
                 Left = inputRectangles[0].Left,
                 Bottom = inputRectangles[0].Bottom + currentGroundBottom,
                 Width = rectanglesInfo.TotalWidth,
                 Height = inputRectangles[rectanglesInfo.IMin].Height - currentGroundBottom,
             };
-        }
-
 
         public static T[] SubArray<T>(T[] data, int index, int length)
         {
