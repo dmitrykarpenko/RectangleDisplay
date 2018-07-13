@@ -25,8 +25,11 @@ namespace Derivco.FullStack.Assignment.Web.Controllers
     [HttpPost]
     public ActionResult CalculateSolution(ParemetersViewModel parameters)
     {
-      IList<Rectangle> inputRectangles = _rectangleGenerator.GenerateRandomRectangles(parameters.RectangleCount);
+      IList<Rectangle> inputRectangles = _rectangleGenerator.GenerateRandomRectangles(
+          parameters.RectangleCount);
+
       Solution solution = _solutionCalculator.Calculate(inputRectangles);
+
       return View(_mapper.Map<SolutionViewModel>(solution));
     }
 
