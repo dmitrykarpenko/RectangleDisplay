@@ -71,19 +71,25 @@ namespace Derivco.FullStack.Assignment
                 _outputRectangles.Add(horizontalRectangle);
 
             var iMin = rectanglesInfo.IMin;
-
-            var leftInputs = SubArray(inputRectangles,
-                0, rectanglesInfo.IMin);
-            var rightInputs = SubArray(inputRectangles,
-                iMin + 1, inputRectangles.Length - 1 - iMin);
-
             var nextCurrentGroundBottom = inputRectangles[iMin].Height;
 
-            if (leftInputs.Length > 0)
-                RotateRectangles(leftInputs, nextCurrentGroundBottom);
+            var leftsLength = iMin;
+            if (leftsLength > 0)
+            {
+                var leftInputs = SubArray(inputRectangles,
+                    0, leftsLength);
 
-            if (rightInputs.Length > 0)
+                RotateRectangles(leftInputs, nextCurrentGroundBottom);
+            }
+
+            var rightsLength = inputRectangles.Length - 1 - iMin;
+            if (rightsLength > 0)
+            {
+                var rightInputs = SubArray(inputRectangles,
+                    iMin + 1, rightsLength);
+
                 RotateRectangles(rightInputs, nextCurrentGroundBottom);
+            }
         }
 
         private class RectanglesInfo

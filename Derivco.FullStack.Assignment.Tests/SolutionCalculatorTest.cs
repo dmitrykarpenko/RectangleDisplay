@@ -79,5 +79,27 @@ namespace Derivco.FullStack.Assignment.Tests
             solution.OutputRectangles.Count.Should().Be(3);
             solution.OutputRectangles[0].ShouldBeEquivalentTo(firstExpected);
         }
+
+        [Test]
+        public void Calculate_GivenThreeDescendingRectangles_ShouldCalculateCorrectSolution()
+        {
+            // Arrange
+            var calculator = new SolutionCalculator();
+            var inputRectangles = new List<Rectangle>
+            {
+                new Rectangle(2, 5, 0, 0),
+                new Rectangle(2, 4, 2, 0),
+                new Rectangle(2, 1, 4, 0),
+            };
+            var firstExpected = new Rectangle(6, 1);
+
+            // Act
+            Solution solution = calculator.Calculate(inputRectangles);
+
+            // Assert
+            solution.InputRectangles.ShouldAllBeEquivalentTo(inputRectangles);
+            solution.OutputRectangles.Count.Should().Be(3);
+            solution.OutputRectangles[0].ShouldBeEquivalentTo(firstExpected);
+        }
     }
 }
