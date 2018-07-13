@@ -56,7 +56,6 @@ namespace Derivco.FullStack.Assignment
         /// <param name="inputRectangles">
         /// Is of type array in order to use Array.Copy later on
         /// </param>
-        /// <param name="currentGroundBottom"></param>
         private void RotateRectangles(
             Rectangle[] inputRectangles,
             int currentGroundBottom)
@@ -66,15 +65,17 @@ namespace Derivco.FullStack.Assignment
             var horizontalRectangle = CreateHorizontalReatangle(
                 inputRectangles, rectanglesInfo, currentGroundBottom);
 
-            // side effects - adding results to the collection
-            _outputRectangles.Add(horizontalRectangle);
+            // if not a degenerate case, add a result to the collection
+            // (i.e. the RotateRectangles' side effect)
+            if (horizontalRectangle.Height > 0)
+                _outputRectangles.Add(horizontalRectangle);
 
             var iMin = rectanglesInfo.IMin;
 
-            var leftInputs = SubArray(inputRectangles, 0, rectanglesInfo.IMin);
+            var leftInputs = SubArray(inputRectangles,
+                0, rectanglesInfo.IMin);
             var rightInputs = SubArray(inputRectangles,
-                iMin + 1,
-                inputRectangles.Length - 1 - iMin);
+                iMin + 1, inputRectangles.Length - 1 - iMin);
 
             var nextCurrentGroundBottom = inputRectangles[iMin].Height;
 

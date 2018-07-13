@@ -17,7 +17,7 @@ namespace Derivco.FullStack.Assignment.Tests
     public class SolutionCalculatorTest
     {
         [Test]
-        public void Calculate_GivenRectangles_ShouldCalculateCorrectSolution()
+        public void Calculate_GivenTwoRectangles_ShouldCalculateCorrectSolution()
         {
             // Arrange
             var calculator = new SolutionCalculator();
@@ -38,6 +38,27 @@ namespace Derivco.FullStack.Assignment.Tests
         }
 
         [Test]
+        public void Calculate_GivenTwoRectangles_ShouldCalculateOneCorrectSolution()
+        {
+            // Arrange
+            var calculator = new SolutionCalculator();
+            var inputRectangles = new List<Rectangle>
+            {
+                new Rectangle(2, 7),
+                new Rectangle(4, 7, 2) // should not overlap
+            };
+            var expected = new Rectangle(6, 7);
+
+            // Act
+            Solution solution = calculator.Calculate(inputRectangles);
+
+            // Assert
+            solution.InputRectangles.ShouldAllBeEquivalentTo(inputRectangles);
+            solution.OutputRectangles.Count.Should().Be(1);
+            solution.OutputRectangles[0].ShouldBeEquivalentTo(expected);
+        }
+
+        [Test]
         public void Calculate_GivenThreeRectangles_ShouldCalculateCorrectSolution()
         {
             // Arrange
@@ -48,7 +69,7 @@ namespace Derivco.FullStack.Assignment.Tests
                 new Rectangle(2, 2, 2, 0),
                 new Rectangle(4, 8, 4, 0),
             };
-            var expected = new Rectangle(8, 2);
+            var firstExpected = new Rectangle(8, 2);
 
             // Act
             Solution solution = calculator.Calculate(inputRectangles);
@@ -56,7 +77,7 @@ namespace Derivco.FullStack.Assignment.Tests
             // Assert
             solution.InputRectangles.ShouldAllBeEquivalentTo(inputRectangles);
             solution.OutputRectangles.Count.Should().Be(3);
-            solution.OutputRectangles[0].ShouldBeEquivalentTo(expected);
+            solution.OutputRectangles[0].ShouldBeEquivalentTo(firstExpected);
         }
     }
 }
