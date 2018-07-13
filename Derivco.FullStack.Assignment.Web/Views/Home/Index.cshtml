@@ -9,7 +9,10 @@
     <label asp-for="RectangleCount" class="control-label"></label>
     <div>
       <div>
-        <input type="range" min="3" max="30" class="form-control" onchange="$('#RectangleCount').val($(this).val())" value="@Model.RectangleCount" aria-describedby="RectangleCount"/>
+        <input type="range" min="3" max="30" class="form-control"
+               onchange="$('#RectangleCount').val($(this).val())"
+               value="@Model.RectangleCount"
+               aria-describedby="RectangleCount"/>
         <input asp-for="RectangleCount" class="form-control"/>
       </div>
       <span asp-validation-for="RectangleCount" class="text-danger"></span>
