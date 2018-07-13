@@ -2,115 +2,82 @@
 @using Newtonsoft.Json
 @model SolutionViewModel
 @{
-  ViewBag.Title = "Solution";
+    ViewBag.Title = "Solution";
 }
 
 <h2>Output</h2>
 <canvas id="output"></canvas>
 
 <div class="panel-group" id="output-accordion">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#output-accordion" href="#output-collapse">Output Data</a>
-      </h4>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#output-accordion" href="#output-collapse">Output Data</a>
+            </h4>
+        </div>
+        <div id="output-collapse" class="panel-collapse collapse">
+            <table id="output-table" class="table table-striped table-condensed panel-body">
+                <tr>
+                    <th>Left</th>
+                    <th>Bottom</th>
+                    <th>Width</th>
+                    <th>Height</th>
+                </tr>
+                @foreach (RectangleViewModel rectangle in Model.OutputRectangles)
+                {
+                    <tr class="rectangle">
+                        <td class="rectangle-left">@rectangle.Left</td>
+                        <td class="rectangle-bottom">@rectangle.Bottom</td>
+                        <td class="rectangle-width">@rectangle.Width</td>
+                        <td class="rectangle-height">@rectangle.Height</td>
+                    </tr>
+                }
+            </table>
+        </div>
     </div>
-    <div id="output-collapse" class="panel-collapse collapse">
-      <table id="output-table" class="table table-striped table-condensed panel-body">
-        <tr>
-          <th>Left</th>
-          <th>Bottom</th>
-          <th>Width</th>
-          <th>Height</th>
-        </tr>
-        @foreach (RectangleViewModel rectangle in Model.OutputRectangles)
-        {
-          <tr class="rectangle">
-            <td class="rectangle-left">@rectangle.Left</td>
-            <td class="rectangle-bottom">@rectangle.Bottom</td>
-            <td class="rectangle-width">@rectangle.Width</td>
-            <td class="rectangle-height">@rectangle.Height</td>
-          </tr>
-        }
-      </table>
-    </div>
-  </div>
 </div>
 
 <h2>Input</h2>
 <canvas id="input"></canvas>
 
 <div class="panel-group" id="accordion">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Input Data</a>
-      </h4>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Input Data</a>
+            </h4>
+        </div>
+        <div id="collapse2" class="panel-collapse collapse">
+            <table id="input-table" class="table table-striped table-condensed panel-body">
+                <tr>
+                    <th>Left</th>
+                    <th>Bottom</th>
+                    <th>Width</th>
+                    <th>Height</th>
+                </tr>
+                @foreach (RectangleViewModel rectangle in Model.InputRectangles)
+                {
+                    <tr class="rectangle">
+                        <td class="rectangle-left">@rectangle.Left</td>
+                        <td class="rectangle-bottom">@rectangle.Bottom</td>
+                        <td class="rectangle-width">@rectangle.Width</td>
+                        <td class="rectangle-height">@rectangle.Height</td>
+                    </tr>
+                }
+            </table>
+        </div>
     </div>
-    <div id="collapse2" class="panel-collapse collapse">
-      <table id="input-table" class="table table-striped table-condensed panel-body">
-        <tr>
-          <th>Left</th>
-          <th>Bottom</th>
-          <th>Width</th>
-          <th>Height</th>
-        </tr>
-        @foreach (RectangleViewModel rectangle in Model.InputRectangles)
-        {
-          <tr class="rectangle">
-            <td class="rectangle-left">@rectangle.Left</td>
-            <td class="rectangle-bottom">@rectangle.Bottom</td>
-            <td class="rectangle-width">@rectangle.Width</td>
-            <td class="rectangle-height">@rectangle.Height</td>
-          </tr>
-        }
-      </table>
-    </div>
-  </div>
 </div>
 
 @section Scripts {
-  <script type="text/javascript">
-    function drawRectangles(stageWidth, stageHeight, elementName, rectangles) {
-      var renderer = PIXI.autoDetectRenderer(
-        stageWidth,
-        stageHeight,
-        {
-          antialias: true,
-          transparent: false,
-          backgroundColor: 0xFFFFFF,
-          view: document.getElementById(elementName)
+    <script src="~/js/home/calculate-solution.js"></script>
+    <script>
+        $(function () {
+            var inputRectangles = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.InputRectangles))');
+            drawRectangles(600, 300, "input", inputRectangles);
+
+            var outputRectangles = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OutputRectangles))');
+            drawRectangles(600, 300, "output", outputRectangles);
         });
-
-      var stage = new PIXI.Container();
-
-      stage.position.y = renderer.height / renderer.resolution;
-      stage.scale.y = -1;
-
-      var graphics = new PIXI.Graphics();
-      graphics.beginFill(0xFFFFFF);
-      graphics.lineStyle(1, 0x000000);
-
-      var totalWidth = rectangles[rectangles.length - 1].Left + rectangles[rectangles.length - 1].Width;
-      var scaleX = stageWidth / totalWidth;
-      var scaleY = stageHeight / 30;
-
-      for (var i = 0; i < rectangles.length; i++) {
-        var rect = rectangles[i];
-        graphics.drawRect(rect.Left * scaleX, rect.Bottom * scaleY, rect.Width * scaleX, rect.Height * scaleY);
-      }
-
-      stage.addChild(graphics);
-
-      renderer.render(stage);
-    }
-
-    $(function() {
-      var inputRectangles = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.InputRectangles))');
-      drawRectangles(600, 300, "input", inputRectangles);
-
-      var outputRectangles = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OutputRectangles))');
-      drawRectangles(600, 300, "output", outputRectangles);
-    });
-  </script>
+    </script>
 }
