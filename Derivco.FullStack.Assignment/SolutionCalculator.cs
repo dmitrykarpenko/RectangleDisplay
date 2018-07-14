@@ -34,7 +34,7 @@ namespace Derivco.FullStack.Assignment
             _inputRectangles = inputRectangles;
             _outputRectangles = new List<Rectangle>();
 
-            RotateRectangles(0, _inputRectangles.Count - 1, inputRectangles[0].Bottom);
+            RotateRectanglesRecursive(0, _inputRectangles.Count - 1, inputRectangles[0].Bottom);
  
             return _outputRectangles;
         }
@@ -59,7 +59,7 @@ namespace Derivco.FullStack.Assignment
         /// </summary>
         /// <param name="iFirst"> first index of a considered _inputRectangles' subarray </param>
         /// <param name="iLast"> last index of a considered _inputRectangles' subarray </param>
-        private void RotateRectangles(
+        private void RotateRectanglesRecursive(
             int iFirst, int iLast,
             int currentGroundBottom)
         {
@@ -80,14 +80,14 @@ namespace Derivco.FullStack.Assignment
             var iLeftsLast = iMin - 1;
             if (iLeftsFirst <= iLeftsLast)
             {
-                RotateRectangles(iLeftsFirst, iLeftsLast, nextCurrentGroundBottom);
+                RotateRectanglesRecursive(iLeftsFirst, iLeftsLast, nextCurrentGroundBottom);
             }
 
             var iRightsFirst = iMin + 1;
             var iRightsLast = iLast;
             if (iRightsFirst <= iRightsLast)
             {
-                RotateRectangles(iRightsFirst, iRightsLast, nextCurrentGroundBottom);
+                RotateRectanglesRecursive(iRightsFirst, iRightsLast, nextCurrentGroundBottom);
             }
         }
 
