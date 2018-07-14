@@ -23,15 +23,18 @@ namespace Derivco.FullStack.Assignment
         }
         #endregion
 
+        private IList<Rectangle> _inputRectangles;
+
         // the algorithm can be made concurrent
         // by making this collection concurrent
         private IList<Rectangle> _outputRectangles;
 
         private IList<Rectangle> CalculateSolution(IList<Rectangle> inputRectangles)
         {
+            _inputRectangles = inputRectangles;
             _outputRectangles = new List<Rectangle>();
 
-            RotateRectangles(inputRectangles.ToArray(), inputRectangles[0].Bottom);
+            RotateRectangles(0, _inputRectangles.Count - 1, inputRectangles[0].Bottom);
  
             return _outputRectangles;
         }
@@ -53,22 +56,17 @@ namespace Derivco.FullStack.Assignment
         ///  so O(nlog(n)) performance is probabilistically guaranteed.
         /// 
         /// Space complexity is O(n) as we at least have to hold the collection of results.
-        /// 
-        /// The algorithm can be improved by passing first/last indices
-        /// instead of creating leftInputs and rightInputs
-        /// and holding initial inputRectangles in a class field.
         /// </summary>
-        /// <param name="inputRectangles">
-        /// Is of type array in order to use Array.Copy later on
-        /// </param>
+        /// <param name="iFirst"> first index of a considered _inputRectangles' subarray </param>
+        /// <param name="iLast"> last index of a considered _inputRectangles' subarray </param>
         private void RotateRectangles(
-            Rectangle[] inputRectangles,
+            int iFirst, int iLast,
             int currentGroundBottom)
         {
-            var rectanglesInfo = FindIndexOfWithMinHeight(inputRectangles);
+            var rectanglesInfo = FindIndexOfWithMinHeight(iFirst, iLast);
 
             var horizontalRectangle = CreateHorizontalReatangle(
-                inputRectangles, rectanglesInfo, currentGroundBottom);
+                iFirst, rectanglesInfo, currentGroundBottom);
 
             // if not a degenerate case, add a result to the collection
             // (i.e. the RotateRectangles' side effect)
@@ -76,24 +74,20 @@ namespace Derivco.FullStack.Assignment
                 _outputRectangles.Add(horizontalRectangle);
 
             var iMin = rectanglesInfo.IMin;
-            var nextCurrentGroundBottom = inputRectangles[iMin].Height;
+            var nextCurrentGroundBottom = _inputRectangles[iMin].Height;
 
-            var leftsLength = iMin;
-            if (leftsLength > 0)
+            var iLeftsFirst = iFirst;
+            var iLeftsLast = iMin - 1;
+            if (iLeftsFirst <= iLeftsLast)
             {
-                var leftInputs = SubArray(inputRectangles,
-                    0, leftsLength);
-
-                RotateRectangles(leftInputs, nextCurrentGroundBottom);
+                RotateRectangles(iLeftsFirst, iLeftsLast, nextCurrentGroundBottom);
             }
 
-            var rightsLength = inputRectangles.Length - 1 - iMin;
-            if (rightsLength > 0)
+            var iRightsFirst = iMin + 1;
+            var iRightsLast = iLast;
+            if (iRightsFirst <= iRightsLast)
             {
-                var rightInputs = SubArray(inputRectangles,
-                    iMin + 1, rightsLength);
-
-                RotateRectangles(rightInputs, nextCurrentGroundBottom);
+                RotateRectangles(iRightsFirst, iRightsLast, nextCurrentGroundBottom);
             }
         }
 
@@ -102,40 +96,34 @@ namespace Derivco.FullStack.Assignment
             public int IMin { get; set; }
             public int TotalWidth { get; set; }
         }
-
-        private static RectanglesInfo FindIndexOfWithMinHeight(Rectangle[] inputRectangles)
+        
+        private RectanglesInfo FindIndexOfWithMinHeight(
+            int iFirst, int iLast)
         {
-            var iMin = 0;
-            var totalWidth = inputRectangles[0].Width;
-
-            for (int i = 1; i < inputRectangles.Length; ++i)
+            var iMin = iFirst;
+            var totalWidth = _inputRectangles[iFirst].Width;
+            
+            for (int i = iFirst + 1; i <= iLast; ++i)
             {
-                if (inputRectangles[i].Height < inputRectangles[iMin].Height)
+                if (_inputRectangles[i].Height < _inputRectangles[iMin].Height)
                 {
                     iMin = i;
                 }
-                totalWidth += inputRectangles[i].Width;
+                totalWidth += _inputRectangles[i].Width;
             }
             return new RectanglesInfo { IMin = iMin, TotalWidth = totalWidth };
         }
 
         private Rectangle CreateHorizontalReatangle(
-                Rectangle[] inputRectangles,
+                int iFirst,
                 RectanglesInfo rectanglesInfo,
                 int currentGroundBottom) =>
             new Rectangle
             {
-                Left = inputRectangles[0].Left,
-                Bottom = inputRectangles[0].Bottom + currentGroundBottom,
+                Left = _inputRectangles[iFirst].Left,
+                Bottom = _inputRectangles[iFirst].Bottom + currentGroundBottom,
                 Width = rectanglesInfo.TotalWidth,
-                Height = inputRectangles[rectanglesInfo.IMin].Height - currentGroundBottom,
+                Height = _inputRectangles[rectanglesInfo.IMin].Height - currentGroundBottom,
             };
-
-        public static T[] SubArray<T>(T[] data, int index, int length)
-        {
-            T[] result = new T[length];
-            Array.Copy(data, index, result, 0, length);
-            return result;
-        }
     }
 }
