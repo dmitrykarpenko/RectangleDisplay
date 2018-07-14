@@ -45,7 +45,12 @@ namespace Derivco.FullStack.Assignment
         /// 
         /// We do O(n) operations (where n is the length of the current inputRectangles) on each recursion calls,
         /// depth of the stack is O(log(n)) (where n is the length of the initial inputRectangles).
-        /// Thus, the whole algorithm is of O(nlog(n)) time complexity.
+        /// Thus, the whole algorithm is of O(nlog(n)) average time complexity.
+        /// The algorithm's time complexity can degrade to O(n^2)
+        ///  - e.g. for a series of descending (by height) rectangles,
+        ///  but such event's probability is insignificant
+        ///  if the input rectangles heights are uniformly distributed (as they are),
+        ///  so O(nlog(n)) performance is probabilistically guaranteed.
         /// 
         /// Space complexity is O(n) as we at least have to hold the collection of results.
         /// 
