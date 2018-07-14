@@ -59,6 +59,7 @@ namespace Derivco.FullStack.Assignment
         ///  so O(nlog(n)) performance is probabilistically guaranteed.
         /// 
         /// Space complexity is O(n) as we at least have to hold the collection of results.
+        /// Recursive call stack itself only takes O(log(n)) memory.
         /// </summary>
         /// <param name="iFirst"> first index of a considered _inputRectangles' subarray </param>
         /// <param name="iLast"> last index of a considered _inputRectangles' subarray </param>
@@ -74,7 +75,9 @@ namespace Derivco.FullStack.Assignment
             // if not a degenerate case, add a result to the collection
             // (i.e. the RotateRectangles' side effect)
             if (horizontalRectangle.Height > 0)
+            {
                 _outputRectangles.Add(horizontalRectangle);
+            }
 
             var iMin = rectanglesInfo.IMin;
             var nextCurrentGroundBottom = _inputRectangles[iMin].Height;
@@ -99,7 +102,17 @@ namespace Derivco.FullStack.Assignment
             public int IMin { get; set; }
             public int TotalWidth { get; set; }
         }
-        
+
+        /// <summary>
+        /// Now returns the index of the first rectangle of minimum height (index of min),
+        /// which is OK for random heights;
+        /// if given many same-height rectangles, should then return middle index of min, e.g:
+        /// heights: [3, 2, 4, 2, 2, 5] => iMins: [1, 3, 4] =>
+        ///     => returned iMin now is 1, should be 3 for better performance.
+        ///     
+        /// Time complexity: O(n).
+        /// Space complexity: O(1) (could be O(n) if used iMins).
+        /// </summary>
         private RectanglesInfo FindIndexOfWithMinHeight(
             int iFirst, int iLast)
         {
