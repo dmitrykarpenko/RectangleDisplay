@@ -18,7 +18,7 @@
     graphics.beginFill(0xFFFFFF);
     graphics.lineStyle(1, 0x000000);
 
-    var totalWidth = rectangles[rectangles.length - 1].Left + rectangles[rectangles.length - 1].Width;
+    var totalWidth = getTotalWidth(rectangles, elementName);
     var scaleX = stageWidth / totalWidth;
     var scaleY = stageHeight / 30;
 
@@ -34,4 +34,15 @@
     stage.addChild(graphics);
 
     renderer.render(stage);
+
+    function getTotalWidth(rectangles, elementName) {
+        return elementName == "input" ? getLast(rectangles).Left + getLast(rectangles).Width
+             : elementName == "output" ? rectangles[0].Width
+             : null;
+
+        function getLast(items) {
+            return items[items.length - 1];
+        }
+    }
 }
+
