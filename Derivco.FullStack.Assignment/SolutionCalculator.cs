@@ -34,7 +34,10 @@ namespace Derivco.FullStack.Assignment
             _inputRectangles = inputRectangles;
             _outputRectangles = new List<Rectangle>();
 
-            RotateRectanglesRecursive(0, _inputRectangles.Count - 1, inputRectangles[0].Bottom);
+            if (_inputRectangles?.Count > 0)
+            {
+                RotateRectanglesRecursive(0, _inputRectangles.Count - 1, inputRectangles[0].Bottom);
+            }
  
             return _outputRectangles;
         }
