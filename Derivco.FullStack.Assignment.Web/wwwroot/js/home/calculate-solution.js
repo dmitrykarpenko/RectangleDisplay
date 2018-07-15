@@ -18,15 +18,18 @@
     graphics.beginFill(0xFFFFFF);
     graphics.lineStyle(1, 0x000000);
 
+    var leftPadding = 1;
+    var rightPadding = 1;
+
     var totalWidth = getTotalWidth(rectangles);
-    var scaleX = stageWidth / totalWidth;
-    var scaleY = stageHeight / 30;
+    var scaleX = (stageWidth - leftPadding) / totalWidth;
+    var scaleY = (stageHeight - rightPadding) / 30;
 
     for (var i = 0; i < rectangles.length; i++) {
         var rect = rectangles[i];
         graphics.drawRect(
-            rect.Left * scaleX,
-            rect.Bottom * scaleY,
+            rect.Left * scaleX + leftPadding,
+            rect.Bottom * scaleY + rightPadding,
             rect.Width * scaleX,
             rect.Height * scaleY);
     }
