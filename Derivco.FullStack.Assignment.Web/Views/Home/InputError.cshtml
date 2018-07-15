@@ -1,0 +1,16 @@
+﻿@using Derivco.FullStack.Assignment.Web.ViewModels
+@model InputErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+@if (Model.Errors?.Any() == true)
+{
+    <h1>Invalid input</h1>
+    <div>
+        @foreach (var error in Model.Errors)
+        {
+            <p class="text-danger">@error</p>
+        }
+    </div>
+}

@@ -6,78 +6,92 @@
 }
 
 <h2>Output</h2>
-<canvas id="output"></canvas>
+@if (Model.OutputRectangles?.Any() == true)
+{
+    <canvas id="output"></canvas>
 
-<div class="panel-group" id="output-accordion">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#output-accordion" href="#output-collapse">Output Data</a>
-            </h4>
-        </div>
-        <div id="output-collapse" class="panel-collapse collapse">
-            <table id="output-table" class="table table-striped table-condensed panel-body">
-                <tr>
-                    <th>Left</th>
-                    <th>Bottom</th>
-                    <th>Width</th>
-                    <th>Height</th>
-                </tr>
-                @foreach (RectangleViewModel rectangle in Model.OutputRectangles)
-                {
-                    <tr class="rectangle">
-                        <td class="rectangle-left">@rectangle.Left</td>
-                        <td class="rectangle-bottom">@rectangle.Bottom</td>
-                        <td class="rectangle-width">@rectangle.Width</td>
-                        <td class="rectangle-height">@rectangle.Height</td>
+    <div class="panel-group" id="output-accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#output-accordion" href="#output-collapse">Output Data</a>
+                </h4>
+            </div>
+            <div id="output-collapse" class="panel-collapse collapse">
+                <table id="output-table" class="table table-striped table-condensed panel-body">
+                    <tr>
+                        <th>Left</th>
+                        <th>Bottom</th>
+                        <th>Width</th>
+                        <th>Height</th>
                     </tr>
-                }
-            </table>
+                    @foreach (RectangleViewModel rectangle in Model.OutputRectangles)
+                    {
+                        <tr class="rectangle">
+                            <td class="rectangle-left">@rectangle.Left</td>
+                            <td class="rectangle-bottom">@rectangle.Bottom</td>
+                            <td class="rectangle-width">@rectangle.Width</td>
+                            <td class="rectangle-height">@rectangle.Height</td>
+                        </tr>
+                    }
+                </table>
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <p>No output rectengles</p>
+}
 
 <h2>Input</h2>
-<canvas id="input"></canvas>
+@if (Model.InputRectangles?.Any() == true)
+{
+    <canvas id="input"></canvas>
 
-<div class="panel-group" id="accordion">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Input Data</a>
-            </h4>
-        </div>
-        <div id="collapse2" class="panel-collapse collapse">
-            <table id="input-table" class="table table-striped table-condensed panel-body">
-                <tr>
-                    <th>Left</th>
-                    <th>Bottom</th>
-                    <th>Width</th>
-                    <th>Height</th>
-                </tr>
-                @foreach (RectangleViewModel rectangle in Model.InputRectangles)
-                {
-                    <tr class="rectangle">
-                        <td class="rectangle-left">@rectangle.Left</td>
-                        <td class="rectangle-bottom">@rectangle.Bottom</td>
-                        <td class="rectangle-width">@rectangle.Width</td>
-                        <td class="rectangle-height">@rectangle.Height</td>
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Input Data</a>
+                </h4>
+            </div>
+            <div id="collapse2" class="panel-collapse collapse">
+                <table id="input-table" class="table table-striped table-condensed panel-body">
+                    <tr>
+                        <th>Left</th>
+                        <th>Bottom</th>
+                        <th>Width</th>
+                        <th>Height</th>
                     </tr>
-                }
-            </table>
+                    @foreach (RectangleViewModel rectangle in Model.InputRectangles)
+                    {
+                        <tr class="rectangle">
+                            <td class="rectangle-left">@rectangle.Left</td>
+                            <td class="rectangle-bottom">@rectangle.Bottom</td>
+                            <td class="rectangle-width">@rectangle.Width</td>
+                            <td class="rectangle-height">@rectangle.Height</td>
+                        </tr>
+                    }
+                </table>
+            </div>
         </div>
     </div>
-</div>
+}
+else
+{
+    <p>No input rectengles</p>
+}
 
 @section Scripts {
     <script src="~/js/home/calculate-solution.js"></script>
     <script>
-        $(function () {
-            var inputRectangles = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.InputRectangles))');
-            drawRectangles(600, 300, "input", inputRectangles);
+    $(function () {
+        var inputRectangles = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.InputRectangles))');
+        drawRectangles(600, 300, "input", inputRectangles);
 
-            var outputRectangles = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OutputRectangles))');
-            drawRectangles(600, 300, "output", outputRectangles);
-        });
+        var outputRectangles = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.OutputRectangles))');
+        drawRectangles(600, 300, "output", outputRectangles);
+    });
     </script>
 }
